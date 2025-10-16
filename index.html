@@ -1,0 +1,1189 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Interactive Solar System with Black Hole</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      }
+
+      body {
+        background: #000;
+        color: #fff;
+        min-height: 100vh;
+        overflow-x: hidden;
+        padding: 30px 20px;
+        background-image: radial-gradient(
+            white,
+            rgba(255, 255, 255, 0.2) 2px,
+            transparent 4px
+          ),
+          radial-gradient(white, rgba(255, 255, 255, 0.15) 1px, transparent 3px),
+          radial-gradient(white, rgba(255, 255, 255, 0.1) 2px, transparent 4px);
+        background-size: 550px 550px, 350px 350px, 250px 250px;
+        background-position: 0 0, 40px 60px, 130px 270px;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        text-align: center;
+      }
+
+      header {
+        margin-bottom: 50px;
+        padding: 30px 20px;
+      }
+
+      h1 {
+        font-size: 3rem;
+        margin-bottom: 20px;
+        color: #4facfe;
+        text-shadow: 0 0 10px rgba(79, 172, 254, 0.7);
+      }
+
+      .subtitle {
+        font-size: 1.2rem;
+        opacity: 0.8;
+        margin-bottom: 30px;
+        line-height: 1.6;
+      }
+
+      .solar-system {
+        position: relative;
+        height: 600px;
+        margin: 60px auto;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+      }
+
+      .sun {
+        position: absolute;
+        width: 80px;
+        height: 80px;
+        background: radial-gradient(circle, #ffd000, #ff8c00, #ff4d00);
+        border-radius: 50%;
+        box-shadow: 0 0 50px #ff8c00, 0 0 100px rgba(255, 140, 0, 0.5);
+        z-index: 1;
+        animation: pulse 4s infinite alternate;
+        cursor: pointer;
+        transition: transform 0.3s, box-shadow 0.3s;
+      }
+
+      .sun:hover {
+        transform: scale(1.1);
+        box-shadow: 0 0 70px #ff8c00, 0 0 140px rgba(255, 140, 0, 0.7);
+      }
+
+      @keyframes pulse {
+        0% {
+          transform: scale(1);
+          box-shadow: 0 0 50px #ff8c00;
+        }
+        100% {
+          transform: scale(1.05);
+          box-shadow: 0 0 70px #ff8c00, 0 0 120px rgba(255, 140, 0, 0.7);
+        }
+      }
+
+      .black-hole {
+        position: absolute;
+        width: 60px;
+        height: 60px;
+        left: calc(50% + 400px);
+        top: calc(50% - 30px);
+        border-radius: 50%;
+        background: radial-gradient(
+            circle,
+            #000000,
+            #000000 60%,
+            transparent 70%
+          ),
+          radial-gradient(
+            circle at 30% 30%,
+            #330066,
+            #000033 40%,
+            transparent 50%
+          );
+        box-shadow: 0 0 0 2px #330066, 0 0 20px #6600cc,
+          0 0 40px rgba(102, 0, 204, 0.5), inset 0 0 20px #000033;
+        z-index: 1;
+        cursor: pointer;
+        transition: transform 0.3s, box-shadow 0.3s;
+        animation: blackHolePulse 6s infinite alternate;
+      }
+
+      @keyframes blackHolePulse {
+        0% {
+          transform: scale(1);
+          box-shadow: 0 0 0 2px #330066, 0 0 20px #6600cc,
+            0 0 40px rgba(102, 0, 204, 0.5), inset 0 0 20px #000033;
+        }
+        100% {
+          transform: scale(1.1);
+          box-shadow: 0 0 0 3px #440088, 0 0 30px #8800ff,
+            0 0 60px rgba(136, 0, 255, 0.7), inset 0 0 30px #000044;
+        }
+      }
+
+      .black-hole:hover {
+        transform: scale(1.2);
+        box-shadow: 0 0 0 4px #5500aa, 0 0 40px #aa00ff,
+          0 0 80px rgba(170, 0, 255, 0.8), inset 0 0 40px #000055;
+      }
+
+      .accretion-disk {
+        position: absolute;
+        width: 120px;
+        height: 40px;
+        left: calc(50% + 370px);
+        top: calc(50% - 20px);
+        border-radius: 50%;
+        background: radial-gradient(
+          ellipse at center,
+          transparent 0%,
+          transparent 40%,
+          rgba(102, 0, 204, 0.3) 45%,
+          rgba(153, 51, 255, 0.6) 50%,
+          rgba(204, 102, 255, 0.8) 55%,
+          rgba(255, 153, 255, 0.9) 60%,
+          transparent 65%
+        );
+        box-shadow: 0 0 30px rgba(204, 102, 255, 0.5);
+        z-index: 0;
+        transform: rotateX(75deg);
+        animation: diskRotate 15s infinite linear;
+      }
+
+      @keyframes diskRotate {
+        0% {
+          transform: rotateX(75deg) rotateZ(0deg);
+        }
+        100% {
+          transform: rotateX(75deg) rotateZ(360deg);
+        }
+      }
+
+      .orbit {
+        position: absolute;
+        border-radius: 50%;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .planet {
+        position: absolute;
+        border-radius: 50%;
+        cursor: pointer;
+        transition: transform 0.3s, box-shadow 0.3s;
+        z-index: 2;
+      }
+
+      .planet:hover {
+        transform: scale(1.3);
+        box-shadow: 0 0 20px white;
+        z-index: 3;
+      }
+
+      .moon {
+        position: absolute;
+        border-radius: 50%;
+        background: #aaa;
+        cursor: pointer;
+        transition: transform 0.3s, box-shadow 0.3s;
+        z-index: 2;
+      }
+
+      .moon:hover {
+        transform: scale(1.5);
+        box-shadow: 0 0 10px white;
+        z-index: 3;
+      }
+
+      .mercury {
+        background: linear-gradient(135deg, #a6a6a6, #5a5a5a);
+        width: 15px;
+        height: 15px;
+        left: calc(50% - 7.5px);
+        top: calc(50% - 100px);
+      }
+
+      .venus {
+        background: linear-gradient(135deg, #e39e54, #b76935);
+        width: 20px;
+        height: 20px;
+        left: calc(50% - 10px);
+        top: calc(50% - 140px);
+      }
+
+      .earth {
+        background: linear-gradient(135deg, #6b93d6, #2e5a9c);
+        width: 22px;
+        height: 22px;
+        left: calc(50% - 11px);
+        top: calc(50% - 180px);
+      }
+
+      .mars {
+        background: linear-gradient(135deg, #c1440e, #8b2e03);
+        width: 18px;
+        height: 18px;
+        left: calc(50% - 9px);
+        top: calc(50% - 220px);
+      }
+
+      .jupiter {
+        background: linear-gradient(135deg, #c19a6b, #8c7853);
+        width: 40px;
+        height: 40px;
+        left: calc(50% - 20px);
+        top: calc(50% - 270px);
+      }
+
+      .saturn {
+        background: linear-gradient(135deg, #e4bc8a, #b79464);
+        width: 35px;
+        height: 35px;
+        left: calc(50% - 17.5px);
+        top: calc(50% - 310px);
+      }
+
+      .uranus {
+        background: linear-gradient(135deg, #d1e7e7, #87ceeb);
+        width: 28px;
+        height: 28px;
+        left: calc(50% - 14px);
+        top: calc(50% - 350px);
+      }
+
+      .neptune {
+        background: linear-gradient(135deg, #5b5bff, #1e3a8a);
+        width: 26px;
+        height: 26px;
+        left: calc(50% - 13px);
+        top: calc(50% - 390px);
+      }
+
+      .saturn-rings {
+        position: absolute;
+        width: 129%;
+        height: 10px;
+        background: linear-gradient(
+          to right,
+          transparent,
+          rgba(255, 255, 255, 0.7),
+          transparent
+        );
+        border-radius: 50%;
+        top: 50%;
+        left: -10%;
+        transform: translateY(-50%);
+        box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+      }
+
+      .info-panel {
+        position: fixed;
+        bottom: 30px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 90%;
+        max-width: 800px;
+        background: rgba(10, 10, 40, 0.95);
+        border-radius: 15px;
+        padding: 30px;
+        box-shadow: 0 0 30px rgba(0, 0, 0, 0.7);
+        opacity: 0;
+        transition: opacity 0.5s;
+        z-index: 10;
+        border: 1px solid rgba(100, 149, 237, 0.3);
+        pointer-events: none;
+      }
+
+      .info-panel.active {
+        opacity: 1;
+      }
+
+      .planet-name {
+        font-size: 2.2rem;
+        margin-bottom: 20px;
+        color: #4facfe;
+        text-shadow: 0 0 10px rgba(79, 172, 254, 0.5);
+      }
+
+      .moon-name {
+        font-size: 1.8rem;
+        margin-bottom: 20px;
+        color: #ffcc00;
+        text-shadow: 0 0 10px rgba(255, 204, 0, 0.5);
+      }
+
+      .black-hole-name {
+        font-size: 2.2rem;
+        margin-bottom: 20px;
+        color: #cc00ff;
+        text-shadow: 0 0 10px rgba(204, 0, 255, 0.7);
+      }
+
+      .sun-name {
+        font-size: 2.2rem;
+        margin-bottom: 20px;
+        color: #ff8c00;
+        text-shadow: 0 0 10px rgba(255, 140, 0, 0.7);
+      }
+
+      .planet-description {
+        font-size: 1.1rem;
+        line-height: 1.7;
+        color: #ffffff;
+        background: rgba(30, 30, 70, 0.7);
+        border-radius: 10px;
+        border: 1px solid rgba(100, 149, 237, 0.2);
+      }
+
+      .planet-details {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+        gap: 20px;
+        margin-top: 25px;
+      }
+
+      .detail-item {
+        background: rgba(30, 30, 70, 0.7);
+        padding: 18px;
+        border-radius: 10px;
+        border: 1px solid rgba(100, 149, 237, 0.2);
+        transition: transform 0.3s;
+      }
+
+      .detail-item:hover {
+        transform: translateY(-5px);
+        background: rgba(40, 40, 90, 0.8);
+      }
+
+      .detail-label {
+        font-size: 0.9rem;
+        opacity: 0.7;
+        margin-bottom: 8px;
+      }
+
+      .detail-value {
+        font-size: 1.1rem;
+        font-weight: bold;
+        color: #00f2fe;
+      }
+
+      .moons-list {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+
+      .moon-tag {
+        background: rgba(50, 50, 100, 0.7);
+        padding: 10px 15px;
+        border-radius: 20px;
+        font-size: 0.9rem;
+        cursor: pointer;
+        transition: all 0.3s;
+        border: 1px solid rgba(100, 149, 237, 0.3);
+      }
+
+      .moon-tag:hover {
+        background: rgba(70, 70, 120, 0.9);
+        transform: translateY(-3px);
+      }
+
+      @media (max-width: 768px) {
+        body {
+          padding: 20px 15px;
+        }
+
+        header {
+          margin-bottom: 40px;
+          padding: 20px 15px;
+        }
+
+        .solar-system {
+          height: 450px;
+          margin: 40px auto;
+        }
+
+        .planet-details {
+          grid-template-columns: 1fr 1fr;
+          gap: 15px;
+        }
+
+        h1 {
+          font-size: 2.2rem;
+        }
+
+        .black-hole {
+          left: calc(50% + 280px);
+        }
+
+        .accretion-disk {
+          left: calc(50% + 250px);
+        }
+
+        .info-panel {
+          padding: 25px;
+          bottom: 20px;
+        }
+      }
+
+      @media (max-width: 480px) {
+        body {
+          padding: 15px 10px;
+        }
+
+        header {
+          margin-bottom: 30px;
+          padding: 15px 10px;
+        }
+
+        .solar-system {
+          height: 350px;
+          margin: 30px auto;
+        }
+
+        .planet-details {
+          grid-template-columns: 1fr;
+          gap: 12px;
+        }
+
+        h1 {
+          font-size: 1.8rem;
+        }
+
+        .planet-name {
+          font-size: 1.8rem;
+        }
+
+        .black-hole {
+          left: calc(50% + 200px);
+          width: 40px;
+          height: 40px;
+        }
+
+        .accretion-disk {
+          left: calc(50% + 180px);
+          width: 80px;
+          height: 30px;
+        }
+
+        .info-panel {
+          padding: 20px;
+          bottom: 15px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <h1>Interactive Solar System with Black Hole</h1>
+        <p class="subtitle">
+          Hover over the Sun, planets, moons, or the black hole to explore
+          fascinating facts
+        </p>
+      </header>
+
+      <div class="solar-system">
+        <!-- Sun -->
+        <div class="sun" data-object="sun"></div>
+
+        <!-- Black Hole -->
+        <div class="black-hole" data-object="blackhole"></div>
+        <div class="accretion-disk"></div>
+
+        <!-- Mercury -->
+        <div class="orbit" style="width: 200px; height: 200px"></div>
+        <div class="planet mercury" data-planet="mercury"></div>
+
+        <!-- Venus -->
+        <div class="orbit" style="width: 280px; height: 280px"></div>
+        <div class="planet venus" data-planet="venus"></div>
+
+        <!-- Earth -->
+        <div class="orbit" style="width: 360px; height: 360px"></div>
+        <div class="planet earth" data-planet="earth"></div>
+        <!-- Earth's Moon -->
+        <div
+          class="moon"
+          style="
+            width: 5px;
+            height: 5px;
+            left: calc(53% - 2.5px);
+            top: calc(52% - 185px);
+          "
+          data-moon="moon"
+        ></div>
+
+        <!-- Mars -->
+        <div class="orbit" style="width: 440px; height: 440px"></div>
+        <div class="planet mars" data-planet="mars"></div>
+        <!-- Mars' Moons -->
+        <div
+          class="moon"
+          style="
+            width: 3px;
+            height: 3px;
+            left: calc(53% - 1.5px);
+            top: calc(52% - 225px);
+          "
+          data-moon="phobos"
+        ></div>
+        <div
+          class="moon"
+          style="
+            width: 2px;
+            height: 2px;
+            left: calc(53% - 1px);
+            top: calc(52% - 215px);
+          "
+          data-moon="deimos"
+        ></div>
+
+        <!-- Jupiter -->
+        <div class="orbit" style="width: 540px; height: 540px"></div>
+        <div class="planet jupiter" data-planet="jupiter"></div>
+        <!-- Jupiter's Moons -->
+        <div
+          class="moon"
+          style="
+            width: 6px;
+            height: 6px;
+            left: calc(53% - 3px);
+            top: calc(52% - 280px);
+          "
+          data-moon="io"
+        ></div>
+        <div
+          class="moon"
+          style="
+            width: 7px;
+            height: 7px;
+            left: calc(53% - 3.5px);
+            top: calc(54% - 260px);
+          "
+          data-moon="europa"
+        ></div>
+        <div
+          class="moon"
+          style="
+            width: 8px;
+            height: 8px;
+            left: calc(53% - 4px);
+            top: calc(53% - 275px);
+          "
+          data-moon="ganymede"
+        ></div>
+        <div
+          class="moon"
+          style="
+            width: 7px;
+            height: 7px;
+            left: calc(53% - 3.5px);
+            top: calc(53% - 265px);
+          "
+          data-moon="callisto"
+        ></div>
+
+        <div
+          class="moon"
+          style="
+            width: 9px;
+            height: 5px;
+            left: calc(50% - 1px);
+            top: calc(44% - 215px);
+            background-color: red;
+          "
+          data-moon="great red spot"
+        ></div>
+
+        <!-- Saturn -->
+        <div class="orbit" style="width: 620px; height: 620px"></div>
+        <div class="planet saturn" data-planet="saturn">
+          <div class="saturn-rings"></div>
+        </div>
+        <!-- Saturn's Moons -->
+        <div
+          class="moon"
+          style="
+            width: 8px;
+            height: 8px;
+            left: calc(53% - 4px);
+            top: calc(52% - 320px);
+          "
+          data-moon="titan"
+        ></div>
+        <div
+          class="moon"
+          style="
+            width: 5px;
+            height: 5px;
+            left: calc(53% - 2.5px);
+            top: calc(53% - 315px);
+          "
+          data-moon="enceladus"
+        ></div>
+
+        <!-- Uranus -->
+        <div class="orbit" style="width: 700px; height: 700px"></div>
+        <div class="planet uranus" data-planet="uranus"></div>
+        <!-- Uranus' Moons -->
+        <div
+          class="moon"
+          style="
+            width: 5px;
+            height: 5px;
+            left: calc(53% - 2.5px);
+            top: calc(52% - 360px);
+          "
+          data-moon="titania"
+        ></div>
+        <div
+          class="moon"
+          style="
+            width: 4px;
+            height: 4px;
+            left: calc(53% - 2px);
+            top: calc(53% - 355px);
+          "
+          data-moon="oberon"
+        ></div>
+
+        <!-- Neptune -->
+        <div class="orbit" style="width: 780px; height: 780px"></div>
+        <div class="planet neptune" data-planet="neptune"></div>
+        <!-- Neptune's Moons -->
+        <div
+          class="moon"
+          style="
+            width: 6px;
+            height: 6px;
+            left: calc(53% - 3px);
+            top: calc(52% - 400px);
+          "
+          data-moon="triton"
+        ></div>
+      </div>
+
+      <div class="info-panel" id="infoPanel">
+        <h2 class="sun-name" id="objectName">Sun</h2>
+        <p class="planet-description" id="objectDescription">
+          The Sun is the star at the center of our Solar System. It is a nearly
+          perfect sphere of hot plasma, heated to incandescence by nuclear
+          fusion reactions in its core, radiating energy mainly as visible light
+          and infrared radiation.
+        </p>
+        <div class="planet-details" id="objectDetails">
+          <div class="detail-item">
+            <div class="detail-label">Diameter</div>
+            <div class="detail-value">1,391,000 km</div>
+          </div>
+          <div class="detail-item">
+            <div class="detail-label">Mass</div>
+            <div class="detail-value">1.989 × 10³⁰ kg</div>
+          </div>
+          <div class="detail-item">
+            <div class="detail-label">Surface Temperature</div>
+            <div class="detail-value">5,500°C</div>
+          </div>
+          <div class="detail-item">
+            <div class="detail-label">Core Temperature</div>
+            <div class="detail-value">15 million °C</div>
+          </div>
+        </div>
+        <div id="moonsContainer"></div>
+      </div>
+    </div>
+
+    <script>
+      // Planet data with descriptions for all planets
+      const planetData = {
+        mercury: {
+          name: "Mercury",
+          description:
+            "Mercury is the smallest and innermost planet in the Solar System. It's a rocky planet with a surface covered in craters, similar to our Moon. Despite its proximity to the Sun, Mercury is not the hottest planet - that title belongs to Venus. Mercury has no atmosphere to speak of, which means it experiences extreme temperature variations.",
+          details: [
+            { label: "Diameter", value: "4,879 km" },
+            { label: "Distance from Sun", value: "57.9 million km" },
+            { label: "Orbital Period", value: "88 Earth days" },
+            { label: "Surface Temperature", value: "-173°C to 427°C" },
+            { label: "Moons", value: "0" },
+            { label: "Discovery", value: "Known since antiquity" },
+          ],
+          moons: [],
+        },
+        venus: {
+          name: "Venus",
+          description:
+            "Venus is the second planet from the Sun and is often called Earth's sister planet due to their similar size and mass. However, Venus has a thick, toxic atmosphere composed primarily of carbon dioxide with clouds of sulfuric acid, making it the hottest planet in our solar system. Its surface is a volcanic landscape with numerous mountains and vast plains.",
+          details: [
+            { label: "Diameter", value: "12,104 km" },
+            { label: "Distance from Sun", value: "108.2 million km" },
+            { label: "Orbital Period", value: "225 Earth days" },
+            { label: "Surface Temperature", value: "462°C" },
+            { label: "Moons", value: "0" },
+            { label: "Atmosphere", value: "96.5% CO₂" },
+          ],
+          moons: [],
+        },
+        earth: {
+          name: "Earth",
+          description:
+            "Earth is the third planet from the Sun and the only astronomical object known to harbor life. About 71% of Earth's surface is water-covered, and the atmosphere consists mostly of nitrogen and oxygen. Earth's magnetic field and ozone layer protect life from harmful solar radiation. It has one natural satellite, the Moon, which influences ocean tides.",
+          details: [
+            { label: "Diameter", value: "12,742 km" },
+            { label: "Distance from Sun", value: "149.6 million km" },
+            { label: "Orbital Period", value: "365.25 days" },
+            { label: "Surface Temperature", value: "-89°C to 58°C" },
+            { label: "Moons", value: "1" },
+            { label: "Life", value: "Only known planet with life" },
+          ],
+          moons: ["Moon"],
+        },
+        mars: {
+          name: "Mars",
+          description:
+            "Mars is the fourth planet from the Sun and is often referred to as the 'Red Planet' due to its reddish appearance caused by iron oxide on its surface. Mars has polar ice caps, seasons, weather patterns, and evidence of past water activity. It's home to the largest volcano and canyon in the solar system - Olympus Mons and Valles Marineris, respectively.",
+          details: [
+            { label: "Diameter", value: "6,779 km" },
+            { label: "Distance from Sun", value: "227.9 million km" },
+            { label: "Orbital Period", value: "687 Earth days" },
+            { label: "Surface Temperature", value: "-87°C to -5°C" },
+            { label: "Moons", value: "2" },
+            { label: "Atmosphere", value: "95% CO₂" },
+          ],
+          moons: ["Phobos", "Deimos"],
+        },
+        jupiter: {
+          name: "Jupiter",
+          description:
+            "Jupiter is the fifth planet from the Sun and the largest in the Solar System. It's a gas giant with a prominent Great Red Spot, a giant storm that has been raging for at least 400 years. Jupiter has a strong magnetic field and dozens of moons, including the four large Galilean moons discovered by Galileo in 1610. Despite its size, Jupiter rotates faster than any other planet.",
+          details: [
+            { label: "Diameter", value: "139,820 km" },
+            { label: "Distance from Sun", value: "778.5 million km" },
+            { label: "Orbital Period", value: "11.86 Earth years" },
+            { label: "Rotation Period", value: "9.9 hours" },
+            { label: "Moons", value: "95 known" },
+            { label: "Great Red Spot", value: "Giant storm" },
+          ],
+          moons: ["Io", "Europa", "Ganymede", "Callisto"],
+        },
+        saturn: {
+          name: "Saturn",
+          description:
+            "Saturn is the sixth planet from the Sun and is known for its spectacular ring system, which is made up of ice particles and rocky debris. Like Jupiter, Saturn is a gas giant composed mostly of hydrogen and helium. It's the least dense planet in our solar system. Saturn has numerous moons, with Titan being the largest.",
+          details: [
+            { label: "Diameter", value: "116,460 km" },
+            { label: "Distance from Sun", value: "1.43 billion km" },
+            { label: "Orbital Period", value: "29.46 Earth years" },
+            { label: "Rotation Period", value: "10.7 hours" },
+            { label: "Moons", value: "146 known" },
+            { label: "Ring System", value: "Seven main rings" },
+          ],
+          moons: ["Titan", "Enceladus"],
+        },
+        uranus: {
+          name: "Uranus",
+          description:
+            "Uranus is the seventh planet from the Sun and is an ice giant. It's unique for rotating on its side, with its axis nearly parallel to its orbital plane, possibly due to a collision with an Earth-sized object. Uranus has a pale blue color due to methane in its atmosphere and a system of faint rings. It was the first planet discovered with a telescope.",
+          details: [
+            { label: "Diameter", value: "50,724 km" },
+            { label: "Distance from Sun", value: "2.87 billion km" },
+            { label: "Orbital Period", value: "84 Earth years" },
+            { label: "Rotation Period", value: "17.2 hours" },
+            { label: "Moons", value: "27 known" },
+            { label: "Axial Tilt", value: "97.8 degrees" },
+          ],
+          moons: ["Titania", "Oberon"],
+        },
+        neptune: {
+          name: "Neptune",
+          description:
+            "Neptune is the eighth and farthest known planet from the Sun. It's an ice giant with the strongest winds in the Solar System, reaching up to 2,100 km/h. Neptune was the first planet located through mathematical calculations rather than direct observation. It has a dynamic atmosphere with large storm systems, and its moon Triton is one of the coldest objects in the solar system.",
+          details: [
+            { label: "Diameter", value: "49,244 km" },
+            { label: "Distance from Sun", value: "4.5 billion km" },
+            { label: "Orbital Period", value: "165 Earth years" },
+            { label: "Rotation Period", value: "16.1 hours" },
+            { label: "Moons", value: "16 known" },
+            { label: "Wind Speed", value: "Up to 2,100 km/h" },
+          ],
+          moons: ["Triton"],
+        },
+      };
+
+      // Sun data
+      const sunData = {
+        name: "Sun",
+        description:
+          "The Sun is the star at the center of our Solar System. It is a nearly perfect sphere of hot plasma, heated to incandescence by nuclear fusion reactions in its core, radiating energy mainly as visible light and infrared radiation. The Sun is by far the most important source of energy for life on Earth. It accounts for about 99.86% of the total mass of the Solar System.",
+        details: [
+          { label: "Diameter", value: "1,391,000 km" },
+          { label: "Mass", value: "1.989 × 10³⁰ kg" },
+          { label: "Surface Temperature", value: "5,500°C" },
+          { label: "Core Temperature", value: "15 million °C" },
+          { label: "Age", value: "4.6 billion years" },
+          { label: "Composition", value: "74.9% Hydrogen, 23.8% Helium" },
+        ],
+      };
+
+      // Moon data
+      const moonData = {
+        moon: {
+          name: "Moon",
+          description:
+            "Earth's Moon is the fifth largest moon in the solar system and the only celestial body beyond Earth that humans have visited. It has a significant effect on Earth's tides and stabilizes our planet's axial tilt, which helps maintain a stable climate.",
+          details: [
+            { label: "Diameter", value: "3,474 km" },
+            { label: "Orbital Period", value: "27.3 days" },
+            { label: "Distance from Earth", value: "384,400 km" },
+            { label: "Surface Temperature", value: "-173°C to 127°C" },
+          ],
+        },
+        phobos: {
+          name: "Phobos",
+          description:
+            "Phobos is the larger and closer of Mars' two moons. It orbits so close to Mars that it rises and sets twice each Martian day. Phobos is gradually spiraling inward and will eventually crash into Mars or break up into a ring.",
+          details: [
+            { label: "Diameter", value: "22.2 km" },
+            { label: "Orbital Period", value: "7.7 hours" },
+            { label: "Distance from Mars", value: "9,377 km" },
+            { label: "Discovery", value: "1877 by Asaph Hall" },
+          ],
+        },
+        deimos: {
+          name: "Deimos",
+          description:
+            "Deimos is the smaller and more distant of Mars' two moons. It has a smooth appearance due to a layer of regolith that covers its surface. Deimos is gradually moving away from Mars.",
+          details: [
+            { label: "Diameter", value: "12.6 km" },
+            { label: "Orbital Period", value: "30.3 hours" },
+            { label: "Distance from Mars", value: "23,460 km" },
+            { label: "Discovery", value: "1877 by Asaph Hall" },
+          ],
+        },
+        io: {
+          name: "Io",
+          description:
+            "Io is the innermost of Jupiter's four Galilean moons and the most volcanically active body in the solar system. Its surface is covered in sulfur and sulfur dioxide, giving it a colorful appearance.",
+          details: [
+            { label: "Diameter", value: "3,643 km" },
+            { label: "Orbital Period", value: "1.77 days" },
+            { label: "Distance from Jupiter", value: "421,700 km" },
+            { label: "Volcanoes", value: "Over 400 active" },
+          ],
+        },
+        europa: {
+          name: "Europa",
+          description:
+            "Europa is the smallest of Jupiter's four Galilean moons and is primarily made of silicate rock with a water-ice crust. It may have a subsurface ocean that could potentially harbor extraterrestrial life.",
+          details: [
+            { label: "Diameter", value: "3,122 km" },
+            { label: "Orbital Period", value: "3.55 days" },
+            { label: "Distance from Jupiter", value: "671,034 km" },
+            { label: "Surface", value: "Young, icy crust" },
+          ],
+        },
+        ganymede: {
+          name: "Ganymede",
+          description:
+            "Ganymede is the largest moon in the solar system and is even larger than the planet Mercury. It is the only moon known to have its own magnetic field.",
+          details: [
+            { label: "Diameter", value: "5,262 km" },
+            { label: "Orbital Period", value: "7.15 days" },
+            { label: "Distance from Jupiter", value: "1,070,400 km" },
+            { label: "Special Feature", value: "Own magnetic field" },
+          ],
+        },
+        callisto: {
+          name: "Callisto",
+          description:
+            "Callisto is the second-largest of Jupiter's moons and the third-largest moon in the solar system. It is the most heavily cratered object in the solar system, indicating an ancient surface.",
+          details: [
+            { label: "Diameter", value: "4,821 km" },
+            { label: "Orbital Period", value: "16.69 days" },
+            { label: "Distance from Jupiter", value: "1,882,700 km" },
+            { label: "Surface", value: "Heavily cratered" },
+          ],
+        },
+        titan: {
+          name: "Titan",
+          description:
+            "Titan is Saturn's largest moon and the second-largest moon in the solar system. It is the only moon known to have a dense atmosphere and stable bodies of surface liquid.",
+          details: [
+            { label: "Diameter", value: "5,151 km" },
+            { label: "Orbital Period", value: "15.95 days" },
+            { label: "Distance from Saturn", value: "1,221,850 km" },
+            { label: "Atmosphere", value: "Dense, nitrogen-rich" },
+          ],
+        },
+        enceladus: {
+          name: "Enceladus",
+          description:
+            "Enceladus is one of Saturn's inner moons and is known for its geysers that eject water vapor and ice particles into space. It has a global ocean beneath its icy crust.",
+          details: [
+            { label: "Diameter", value: "504 km" },
+            { label: "Orbital Period", value: "1.37 days" },
+            { label: "Distance from Saturn", value: "238,037 km" },
+            { label: "Special Feature", value: "Active cryovolcanoes" },
+          ],
+        },
+        titania: {
+          name: "Titania",
+          description:
+            "Titania is the largest of Uranus' moons and the eighth-largest moon in the solar system. It has a system of enormous canyons and scarps, suggesting geological activity in its past.",
+          details: [
+            { label: "Diameter", value: "1,578 km" },
+            { label: "Orbital Period", value: "8.71 days" },
+            { label: "Distance from Uranus", value: "435,910 km" },
+            { label: "Surface", value: "Canyons and scarps" },
+          ],
+        },
+        oberon: {
+          name: "Oberon",
+          description:
+            "Oberon is the second-largest and outermost of Uranus' major moons. It has a heavily cratered surface with bright rays emanating from some of the larger craters.",
+          details: [
+            { label: "Diameter", value: "1,523 km" },
+            { label: "Orbital Period", value: "13.46 days" },
+            { label: "Distance from Uranus", value: "583,520 km" },
+            { label: "Surface", value: "Heavily cratered" },
+          ],
+        },
+        triton: {
+          name: "Triton",
+          description:
+            "Triton is Neptune's largest moon and the only large moon in the solar system with a retrograde orbit. It has a thin atmosphere and geysers that erupt nitrogen gas. Triton is thought to have once been a dwarf planet from the Kuiper belt.",
+          details: [
+            { label: "Diameter", value: "2,707 km" },
+            { label: "Orbital Period", value: "5.88 days" },
+            { label: "Distance from Neptune", value: "354,759 km" },
+            { label: "Special Feature", value: "Retrograde orbit" },
+          ],
+        },
+      };
+
+      // Black hole data
+      const blackHoleData = {
+        name: "Sagittarius A*",
+        description:
+          "Sagittarius A* is a supermassive black hole located at the center of our Milky Way galaxy. It has a mass equivalent to about 4 million suns and is approximately 26,000 light-years from Earth. Black holes are regions of spacetime where gravity is so strong that nothing, not even light, can escape from them.",
+        details: [
+          { label: "Mass", value: "4.1 million Suns" },
+          { label: "Distance from Earth", value: "26,000 light-years" },
+          { label: "Type", value: "Supermassive Black Hole" },
+          { label: "Event Horizon Diameter", value: "44 million km" },
+          { label: "Discovery", value: "1974" },
+          { label: "Special Feature", value: "Accretion Disk" },
+        ],
+      };
+
+      // Get DOM elements
+      const sun = document.querySelector(".sun");
+      const planets = document.querySelectorAll(".planet");
+      const moons = document.querySelectorAll(".moon");
+      const blackHole = document.querySelector(".black-hole");
+      const infoPanel = document.getElementById("infoPanel");
+      const objectName = document.getElementById("objectName");
+      const objectDescription = document.getElementById("objectDescription");
+      const objectDetails = document.getElementById("objectDetails");
+      const moonsContainer = document.getElementById("moonsContainer");
+
+      // Add event listener to Sun
+      sun.addEventListener("mouseenter", () => {
+        showSunInfo();
+      });
+
+      sun.addEventListener("mouseleave", () => {
+        hideInfo();
+      });
+
+      // Add event listeners to planets
+      planets.forEach((planet) => {
+        planet.addEventListener("mouseenter", () => {
+          const planetId = planet.getAttribute("data-planet");
+          showPlanetInfo(planetId);
+        });
+
+        planet.addEventListener("mouseleave", () => {
+          hideInfo();
+        });
+      });
+
+      // Add event listeners to moons
+      moons.forEach((moon) => {
+        moon.addEventListener("mouseenter", () => {
+          const moonId = moon.getAttribute("data-moon");
+          showMoonInfo(moonId);
+        });
+
+        moon.addEventListener("mouseleave", () => {
+          hideInfo();
+        });
+      });
+
+      // Add event listener to black hole
+      blackHole.addEventListener("mouseenter", () => {
+        showBlackHoleInfo();
+      });
+
+      blackHole.addEventListener("mouseleave", () => {
+        hideInfo();
+      });
+
+      // Function to show Sun information
+      function showSunInfo() {
+        const data = sunData;
+
+        if (data) {
+          objectName.textContent = data.name;
+          objectName.className = "sun-name";
+          objectDescription.textContent = data.description;
+
+          // Clear previous details
+          objectDetails.innerHTML = "";
+          moonsContainer.innerHTML = "";
+
+          // Add new details
+          data.details.forEach((detail) => {
+            const detailItem = document.createElement("div");
+            detailItem.className = "detail-item";
+            detailItem.innerHTML = `
+                        <div class="detail-label">${detail.label}</div>
+                        <div class="detail-value">${detail.value}</div>
+                    `;
+            objectDetails.appendChild(detailItem);
+          });
+
+          // Show info panel
+          infoPanel.classList.add("active");
+        }
+      }
+
+      // Function to show planet information
+      function showPlanetInfo(planetId) {
+        const data = planetData[planetId];
+
+        if (data) {
+          objectName.textContent = data.name;
+          objectName.className = "planet-name";
+          objectDescription.textContent = data.description;
+
+          // Clear previous details
+          objectDetails.innerHTML = "";
+          moonsContainer.innerHTML = "";
+
+          // Add new details
+          data.details.forEach((detail) => {
+            const detailItem = document.createElement("div");
+            detailItem.className = "detail-item";
+            detailItem.innerHTML = `
+                        <div class="detail-label">${detail.label}</div>
+                        <div class="detail-value">${detail.value}</div>
+                    `;
+            objectDetails.appendChild(detailItem);
+          });
+
+          // Add moons list if the planet has moons
+          if (data.moons.length > 0) {
+            const moonsTitle = document.createElement("h3");
+            moonsTitle.textContent = "Major Moons";
+            moonsTitle.style.marginTop = "15px";
+            moonsTitle.style.color = "#ffcc00";
+            moonsContainer.appendChild(moonsTitle);
+
+            const moonsList = document.createElement("div");
+            moonsList.className = "moons-list";
+
+            data.moons.forEach((moonName) => {
+              const moonTag = document.createElement("div");
+              moonTag.className = "moon-tag";
+              moonTag.textContent = moonName;
+              moonTag.addEventListener("click", () => {
+                showMoonInfo(moonName.toLowerCase());
+              });
+              moonsList.appendChild(moonTag);
+            });
+
+            moonsContainer.appendChild(moonsList);
+          }
+
+          // Show info panel
+          infoPanel.classList.add("active");
+        }
+      }
+
+      // Function to show moon information
+      function showMoonInfo(moonId) {
+        const data = moonData[moonId];
+
+        if (data) {
+          objectName.textContent = data.name;
+          objectName.className = "moon-name";
+          objectDescription.textContent = data.description;
+
+          // Clear previous details
+          objectDetails.innerHTML = "";
+          moonsContainer.innerHTML = "";
+
+          // Add new details
+          data.details.forEach((detail) => {
+            const detailItem = document.createElement("div");
+            detailItem.className = "detail-item";
+            detailItem.innerHTML = `
+                        <div class="detail-label">${detail.label}</div>
+                        <div class="detail-value">${detail.value}</div>
+                    `;
+            objectDetails.appendChild(detailItem);
+          });
+
+          // Show info panel
+          infoPanel.classList.add("active");
+        }
+      }
+
+      // Function to show black hole information
+      function showBlackHoleInfo() {
+        const data = blackHoleData;
+
+        if (data) {
+          objectName.textContent = data.name;
+          objectName.className = "black-hole-name";
+          objectDescription.textContent = data.description;
+
+          // Clear previous details
+          objectDetails.innerHTML = "";
+          moonsContainer.innerHTML = "";
+
+          // Add new details
+          data.details.forEach((detail) => {
+            const detailItem = document.createElement("div");
+            detailItem.className = "detail-item";
+            detailItem.innerHTML = `
+                        <div class="detail-label">${detail.label}</div>
+                        <div class="detail-value">${detail.value}</div>
+                    `;
+            objectDetails.appendChild(detailItem);
+          });
+
+          // Show info panel
+          infoPanel.classList.add("active");
+        }
+      }
+
+      // Function to hide information
+      function hideInfo() {
+        infoPanel.classList.remove("active");
+      }
+    </script>
+  </body>
+</html>

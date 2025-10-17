@@ -44,6 +44,7 @@
         margin-bottom: 20px;
         color: #4facfe;
         text-shadow: 0 0 10px rgba(79, 172, 254, 0.7);
+        transition: font-size 0.3s ease;
       }
 
       .subtitle {
@@ -51,6 +52,7 @@
         opacity: 0.8;
         margin-bottom: 30px;
         line-height: 1.6;
+        transition: opacity 0.3s ease, height 0.3s ease, margin 0.3s ease;
       }
 
       .solar-system {
@@ -398,6 +400,13 @@
         transform: translateY(-3px);
       }
 
+      /* Responsive text behavior */
+      @media (max-width: 1024px) {
+        h1 {
+          font-size: 2.8rem;
+        }
+      }
+
       @media (max-width: 768px) {
         body {
           padding: 20px 15px;
@@ -433,6 +442,19 @@
         .info-panel {
           padding: 25px;
           bottom: 20px;
+        }
+      }
+
+      @media (max-width: 600px) {
+        h1 {
+          font-size: 2rem;
+        }
+
+        .subtitle {
+          opacity: 0;
+          height: 0;
+          margin: 0;
+          overflow: hidden;
         }
       }
 
@@ -492,7 +514,7 @@
           fascinating facts
         </p>
       </header>
-      <br /><br /><br /><br /><br />
+      <br /><br /><br /><br /><br /><br />
       <div class="solar-system">
         <!-- Sun -->
         <div class="sun" data-object="sun"></div>
